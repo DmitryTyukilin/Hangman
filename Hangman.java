@@ -1,4 +1,4 @@
-package Hungman;
+package Hangman;
 
 
 import java.io.*;
