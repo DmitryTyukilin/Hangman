@@ -55,11 +55,13 @@ public class Hangman {
             if (isLetterInWord(word, letter)) {
                 openLetter(cellWord, letter, word);
                 printCellWord(cellWord);
+                printBoard(board);
             } else {
                 counterMistakes++;
                 drawBodyPart(board, counterMistakes);
                 System.out.printf("Количество ошибок %d" + "\n", counterMistakes);
                 printBoard(board);
+                printCellWord(cellWord);
 
             }
             String gameState = checkGameState(board, cellWord);
@@ -74,7 +76,7 @@ public class Hangman {
         ArrayList<String> list = new ArrayList<>();
         int randomIndex = 0;
         try {
-            File file = new File("src/Hungman/resources/dictionary.txt");
+            File file = new File("src/Hangman/resources/dictionary.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             list.add(line);
@@ -123,6 +125,7 @@ public class Hangman {
             for (int i = 0; i < cellWord.length; i++) {
                 if (cellWord[i].equals(inputLatter) && correctInput) {
                     System.out.println("Введена угаданная буква");
+                    break;
                 }
             }
             if (correctInput) {
@@ -149,7 +152,7 @@ public class Hangman {
         for (int i = 0; i < indexLetter.size(); i++) {
             for (int j = 0; j < cellWord.length; j++) {
                 if (j == indexLetter.get(i)) {
-                    cellWord[j] = letter;
+                    cellWord[j] = lettegmar;
                 }
             }
         }
