@@ -56,6 +56,7 @@ public class Hangman {
                 openLetter(cellWord, letter, word);
                 printCellWord(cellWord);
                 printBoard(board);
+                System.out.printf("Количество ошибок %d" + "\n", counterMistakes);
             } else {
                 counterMistakes++;
                 drawBodyPart(board, counterMistakes);
@@ -152,7 +153,7 @@ public class Hangman {
         for (int i = 0; i < indexLetter.size(); i++) {
             for (int j = 0; j < cellWord.length; j++) {
                 if (j == indexLetter.get(i)) {
-                    cellWord[j] = lettegmar;
+                    cellWord[j] = letter;
                 }
             }
         }
