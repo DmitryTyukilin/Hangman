@@ -25,23 +25,25 @@ public class Hangman {
     private static String GAME_STATE_NOT_FINISHED = "Игра не закончена";
 
     public static void main(String[] args) throws IOException {
-        newGameRound();
-    }
-    public static void newGameRound() throws IOException {
+        boolean isInputUserStartGame = true;
         do {
-            System.out.println("Для начала нового раунда нажмите Y, для выхода из приложения N");
-            String inputUser = scanner.next();
-            boolean inputUserCorrect = inputUser.matches("[Y,N]");
-            if (inputUserCorrect) {
+            System.out.println("Введите Y для начала новой игры, для выхода из приложения введите N");
+            String inputUser = scanner.next().toUpperCase();
+            if (inputUser.matches("[Y,N]")) {
                 if (inputUser.equals("Y")) {
+                    isInputUserStartGame = false;
                     startGameRound();
-                } else return;
+                } else {
+                    System.out.println("Вы вышли из игры");
+
+                }
             }
-        } while (true);
+        } while (!isInputUserStartGame);
     }
 
+
     public static void startGameRound() throws IOException {
-        System.out.println("Начало нового раунда");
+        System.out.println("Начало нового игры");
         String[][] board = createBoard();
         String word = getWord();
         String[] cellWord = createCellWord(word);
@@ -226,7 +228,7 @@ public class Hangman {
         return listIndexLetter;
     }
 
-    }
+}
 
 
 
