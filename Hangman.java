@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import static java.lang.String.valueOf;
+
 
 public class Hangman {
     private static Random random = new Random();
@@ -44,22 +46,22 @@ public class Hangman {
 
     public static void startGameRound() throws IOException {
         System.out.println("Начало нового игры");
-        String[][] board = createBoard();
+        char[][] board = createBoard();
         String word = getWord();
         String[] cellWord = createCellWord(word);
         gameLoop(board, cellWord, word);
     }
 
-    public static String[][] createBoard() {
-        String[][] board = new String[ROW_COUNT][COL_COUNT];
+    public static char[][] createBoard() {
+        char[][] board = new char[ROW_COUNT][COL_COUNT];
         for (int row = 0; row < ROW_COUNT; row++) {
             for (int col = 0; col < COL_COUNT; col++) {
                 if (row == 0 & col > 0 & col < COL_COUNT - 1) {
-                    board[row][col] = "-";
+                    board[row][col] = '-';
                 } else if (row > 0 && col == 1) {
-                    board[row][col] = "|";
+                    board[row][col] = '|';
                 } else {
-                    board[row][col] = " ";
+                    board[row][col] = ' ';
                 }
             }
         }
@@ -87,15 +89,15 @@ public class Hangman {
         return list.get(randomIndex);
     }
 
-    public static String[] createCellWord(String word) {
-        String[] display = new String[word.length()];
+    public static StringBuilder createCellWord(String word) {
+        StringBuilder display = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
-            display[i] = "*";
+            display.append("*");
         }
         return display;
     }
 
-    public static void gameLoop(String[][] board, String[] cellWord, String word) throws IOException {
+    public static void gameLoop(char[][] board, String[] cellWord, String word) throws IOException {
         int counterMistakes = 0;
         do {
             String letter = getLetter(cellWord);
@@ -106,13 +108,14 @@ public class Hangman {
                 System.out.printf("Количество ошибок %d" + "\n", counterMistakes);
             } else {
                 counterMistakes++;
+
                 drawBodyPart(board, counterMistakes);
                 System.out.printf("Количество ошибок %d" + "\n", counterMistakes);
                 printBoard(board);
                 printCellWord(cellWord);
 
             }
-            String gameState = checkGameState(board, cellWord);
+            String gameState = checkGameState(board, cellWord, counterMistakes);
             if (!gameState.equals(GAME_STATE_NOT_FINISHED)) {
                 System.out.println(gameState);
                 return;
@@ -125,9 +128,9 @@ public class Hangman {
         do {
             String inputLatter = scanner.next();
             boolean correctInput = inputLatter.matches("[а-я]");
-            for (int i = 0; i < cellWord.length; i++) {
-                if (cellWord[i].equals(inputLatter) && correctInput) {
-                    System.out.println("Введена угаданная буква");
+            for (String letter : cellWord) {
+                if (letter.equals(inputLatter) && correctInput) {
+                    System.out.println("Вы ввели букву, которую отгадали, введите другую букву");
                     break;
                 }
             }
@@ -148,6 +151,9 @@ public class Hangman {
             }
         }
         return false;
+    }
+    public static void showIncorrectInput(String letter) {
+
     }
 
     public static void openLetter(String[] cellWord, String letter, String word) {
@@ -181,47 +187,48 @@ public class Hangman {
         System.out.println(printCellWord);
     }
 
-    public static void printBoard(String[][] board) {
+    public static void printBoard(char[][] board) {
+        StringBuilder print = new StringBuilder();
         for (int row = 0; row < ROW_COUNT; row++) {
-            String line = "| ";
             for (int col = 0; col < COL_COUNT; col++) {
-                line += board[row][col] + " ";
+                System.out.print(board[row][col]);
             }
-            line += "|";
-            System.out.println(line);
+
+            System.out.println(print);
+
         }
     }
 
-    public static void drawBodyPart(String[][] board, int counterMistakes) {
+    public static void drawBodyPart(char[][] board, int counterMistakes) {
         switch (counterMistakes) {
             case 1:
-                board[1][3] = HEAD;
+                board[1][3] = 'O';
                 break;
             case 2:
-                board[2][3] = BODY;
-                board[3][3] = BODY;
+                board[2][3] = '|';
+                board[3][3] = '|';
                 break;
             case 3:
-                board[2][2] = LEFT_HAND;
+                board[2][2] = '/';
                 break;
             case 4:
-                board[2][4] = RIGHT_HAND;
+                board[2][4] = '\\';
                 break;
             case 5:
-                board[4][2] = LEFT_LEG;
+                board[4][2] = '/';
                 break;
             case 6:
-                board[4][4] = RIGHT_LEG;
+                board[4][4] = '\\';
                 break;
         }
     }
 
-    public static String checkGameState(String[][] board, String[] cellWord) {
+    public static String checkGameState(char[][] board, String[] cellWord, int counterMistakes) {
         String result = String.join("", cellWord);
-        boolean contains = result.contains("*");
-        if (contains && board[4][4].equals(RIGHT_LEG)) {
+
+        if (result.contains("*") && counterMistakes == 6) {
             return GAME_OVER;
-        } else if (!contains) {
+        } else if (!result.contains("*")) {
             return YOU_WIN;
         } else {
             return GAME_STATE_NOT_FINISHED;
