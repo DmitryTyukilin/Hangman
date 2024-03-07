@@ -48,7 +48,7 @@ public class Hangman {
         System.out.println("Начало нового игры");
         char[][] board = createBoard();
         String word = getWord();
-        String[] cellWord = createCellWord(word);
+        StringBuilder cellWord = createCellWord(word);
         gameLoop(board, cellWord, word);
     }
 
@@ -94,10 +94,12 @@ public class Hangman {
         for (int i = 0; i < word.length(); i++) {
             display.append("*");
         }
+
+
         return display;
     }
 
-    public static void gameLoop(char[][] board, String[] cellWord, String word) throws IOException {
+    public static void gameLoop(char[][] board, StringBuilder cellWord, String word) throws IOException {
         int counterMistakes = 0;
         do {
             String letter = getLetter(cellWord);
@@ -123,14 +125,15 @@ public class Hangman {
         } while (true);
     }
 
-    public static String getLetter(String[] cellWord) {
+    public static String getLetter(StringBuilder cellWord) {
         System.out.println("Введите букву");
         do {
-            String inputLatter = scanner.next();
+            String inputLatter = scanner.next().toUpperCase();
             boolean correctInput = inputLatter.matches("[а-я]");
-            for (String letter : cellWord) {
+            for (int i = 0; i < cellWord.length(); i++) {
+                String letter = cellWord.substring(i);
                 if (letter.equals(inputLatter) && correctInput) {
-                    System.out.println("Вы ввели букву, которую отгадали, введите другую букву");
+                    System.out.println("Вы ввели букву, которую отгадали ранее, введите другую букву");
                     break;
                 }
             }
@@ -152,16 +155,17 @@ public class Hangman {
         }
         return false;
     }
+
     public static void showIncorrectInput(String letter) {
 
     }
 
-    public static void openLetter(String[] cellWord, String letter, String word) {
-        ArrayList<Integer> indexLetter = getIndexSymbolWord(word, letter);
-        for (int i = 0; i < indexLetter.size(); i++) {
-            for (int j = 0; j < cellWord.length; j++) {
-                if (j == indexLetter.get(i)) {
-                    cellWord[j] = letter;
+    public static void openLetter(StringBuilder cellWord, String letter, String word) {
+        ArrayList<Integer> indexLetter = getIndexSymbolWord(word, letter); // получить индексы отгаданных букв
+        for (int i : indexLetter) {
+            for (int j = 0; j < cellWord.length(); j++) { // дойти до полученного индекса
+                if (j == indexLetter.get(i)) { // если дошли до полученного индекса
+                    cellWord.insert(j, letter); // заменить подстроку по индексу j в cellWord на букву letter
                 }
             }
         }
@@ -169,7 +173,6 @@ public class Hangman {
 
     public static ArrayList<Integer> getIndexSymbolWord(String word, String letter) {
         ArrayList<Integer> listIndexLetter = new ArrayList<>();
-        int counter = 0;
         for (int i = 0; i < word.length(); i++) {
             if (word.charAt(i) == letter.charAt(0)) {
                 listIndexLetter.add(i);
@@ -178,9 +181,9 @@ public class Hangman {
         return listIndexLetter;
     }
 
-    public static void printCellWord(String[] cellWord) {
+    public static void printCellWord(StringBuilder cellWord) {
         String printCellWord = "|";
-        for (int i = 0; i < cellWord.length; i++) {
+        for (int i = 0; i < cellWord.length(); i++) {
             printCellWord += cellWord[i];
         }
         printCellWord += "|";
@@ -223,7 +226,7 @@ public class Hangman {
         }
     }
 
-    public static String checkGameState(char[][] board, String[] cellWord, int counterMistakes) {
+    public static String checkGameState(char[][] board, StringBuilder cellWord, int counterMistakes) {
         String result = String.join("", cellWord);
 
         if (result.contains("*") && counterMistakes == 6) {
