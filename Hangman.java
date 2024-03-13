@@ -31,7 +31,7 @@ public class Hangman {
                 }
             } else {
                 isInputUserStartGame = false;
-                System.out.println("Вы ввели не верную букву");
+                System.out.println("Вы ввели неверную букву");
             }
 
         } while (!isInputUserStartGame);
@@ -104,7 +104,7 @@ public class Hangman {
             String letter = getLetter(cellWord);
             if (isLetterInWord(word, letter)) {
                 openLetter(cellWord, letter, word);
-                System.out.println("Список введеных не верных букв " + printIncorrectLetter);
+                System.out.println("Список введеных неверных букв " + printIncorrectLetter);
             } else {
                 incorrectLetter.add(letter); // добавить букву в список не правильных
                 printIncorrectLetter.add(letter); // добавить букву в список не правильных для печати в ед.экземпляре
@@ -121,7 +121,7 @@ public class Hangman {
                     System.out.println("Вы ввели не верную букву, которую вводили ранее");
                 }
                 System.out.println("Количество ошибок " + counterMistakes);
-                System.out.println("Список введеных не верных букв " + printIncorrectLetter);
+                System.out.println("Список введеных неверных букв " + printIncorrectLetter);
 
             }
             drawBodyPart(board, counterMistakes);
