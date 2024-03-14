@@ -84,7 +84,7 @@ public class Hangman {
 
     public static char[] createCellWord(String word) {
         char[] boardWord = new char[word.length()];
-        int indexHelpLetter = random.nextInt(0, word.length());
+        int indexHelpLetter = random.nextInt(word.length());
         for (int i = 0; i < word.length(); i++) {
             boardWord[i] = '*';
             if (i == indexHelpLetter) {
