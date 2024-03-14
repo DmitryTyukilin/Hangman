@@ -96,6 +96,7 @@ public class Hangman {
 
     public static void gameLoop(char[][] board, char[] cellWord, String word) {
         int counterMistakes = 0;
+        boolean isGameOver = false;
         List<String> incorrectLetter = new ArrayList<>();
         Set<String> printIncorrectLetter = new HashSet<>();
         System.out.println("Ниже загадано слово, попробуйте его отгадать, для этого введите букву");
@@ -105,6 +106,7 @@ public class Hangman {
             if (isLetterInWord(word, letter)) {
                 openLetter(cellWord, letter, word);
                 System.out.println("Список введеных неверных букв " + printIncorrectLetter);
+                System.out.println("Количество ошибок " + counterMistakes + "/6");
             } else {
                 incorrectLetter.add(letter); // добавить букву в список не правильных
                 printIncorrectLetter.add(letter); // добавить букву в список не правильных для печати в ед.экземпляре
@@ -120,9 +122,8 @@ public class Hangman {
                 if (counterIncorrect >= 2) {
                     System.out.println("Вы ввели не верную букву, которую вводили ранее");
                 }
-                System.out.println("Количество ошибок " + counterMistakes);
+                System.out.println("Количество ошибок " + counterMistakes + "/6");
                 System.out.println("Список введеных неверных букв " + printIncorrectLetter);
-
             }
             drawBodyPart(board, counterMistakes);
             printBoard(board);
@@ -130,9 +131,9 @@ public class Hangman {
             String gameState = checkGameState(cellWord, counterMistakes);
             if (!gameState.equals(GAME_STATE_NOT_FINISHED)) {
                 System.out.println(gameState);
-                return;
+                isGameOver = true;
             }
-        } while (true);
+        } while (!isGameOver);
     }
 
     public static String getLetter(char[] cellWord) {
