@@ -1,11 +1,7 @@
 package Hangman;
 
-
 import java.io.*;
 import java.util.*;
-
-import static java.lang.String.valueOf;
-
 
 public class Hangman {
     private static Random random = new Random();
@@ -65,8 +61,8 @@ public class Hangman {
         ArrayList<String> list = new ArrayList<>();
         int randomIndex = 0;
         try {
-            File file = new File("./src/Hangman/resources/dictionary.txt");
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            File file = new File("src/Hangman/resources/dictionary.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
             String line = reader.readLine();
             list.add(line);
             while (line != null) {
@@ -131,6 +127,7 @@ public class Hangman {
             String gameState = checkGameState(cellWord, counterMistakes);
             if (!gameState.equals(GAME_STATE_NOT_FINISHED)) {
                 System.out.println(gameState);
+                System.out.println("Было загадоно слово : " + word);
                 isGameOver = true;
             }
         } while (!isGameOver);
@@ -139,15 +136,14 @@ public class Hangman {
     public static String getLetter(char[] cellWord) {
         do {
             String inputLatter = scanner.next().toLowerCase();
-            boolean correctInput = inputLatter.matches("[а-я]");
-            for (int i = 0; i < cellWord.length; i++) {
-                char letter = cellWord[i];
-                if (letter == inputLatter.charAt(0) && correctInput) {
+            boolean isCorrectInput = inputLatter.matches("[а-я]");
+            for (char letter : cellWord) {
+                if (letter == inputLatter.charAt(0) && isCorrectInput) {
                     System.out.println("Эта буква уже отгадана");
                     break;
                 }
             }
-            if (correctInput) {
+            if (isCorrectInput) {
                 return inputLatter;
             } else {
                 System.out.println("Не корректный ввод, введите букву от а до я");
@@ -221,19 +217,19 @@ public class Hangman {
     }
 
     public static String checkGameState(char[] cellWord, int counterMistakes) {
-        boolean starInWord = true;
+        boolean isStarInWord = true;
         int counterLetter = 0;
         for (int i = 0; i < cellWord.length; i++) {
             if (cellWord[i] != '*') {
                 counterLetter++;
                 if (counterLetter == cellWord.length) {
-                    starInWord = false;
+                    isStarInWord = false;
                 }
             }
         }
         if (counterMistakes == 6) {
             return GAME_OVER;
-        } else if (!starInWord) {
+        } else if (!isStarInWord) {
             return YOU_WIN;
         } else {
             return GAME_STATE_NOT_FINISHED;
